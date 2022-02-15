@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+repositories { mavenCentral() }
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.9.0'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'jvsplit.JavaSplit'
+        )
+    }
+
+    from {
+        configurations.compileClasspath.filter { it.exists() }.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
