@@ -23,20 +23,13 @@ package jvsplit;
 
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.lang.Math;
-
-import javax.sound.sampled.ReverbType;
-
-import java.util.Comparator;
-import java.util.Collections;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -215,9 +208,10 @@ public class Group extends Base {
             ListIterator<Member> listIterator = members.listIterator(members.size());
 
             // Iterate in reverse.
-            while(listIterator.hasPrevious()) {
+            while (listIterator.hasPrevious()) {
                 Member receiver = listIterator.previous();
-                if (sender == receiver) continue;
+                if (sender == receiver)
+                    continue;
 
                 Double sender_balance = sender.balance() + bal_add.get(sender);
                 Double receiver_balance = receiver.balance() + bal_add.get(receiver);
@@ -228,7 +222,7 @@ public class Group extends Base {
                     bal_add.put(receiver, bal_add.get(receiver) - bal);
 
                     Balance balance = new Balance(this, sender.getName(),
-                        receiver.getName(), bal, new Stamp(), this.currency);
+                            receiver.getName(), bal, new Stamp(), this.currency);
                     balances.add(balance);
                 }
             }

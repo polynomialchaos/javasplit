@@ -23,6 +23,7 @@ package jvsplit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import jvsplit.utils.Base;
 
 public class Member extends Base {
