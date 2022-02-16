@@ -36,12 +36,13 @@ public class Base {
         stamp = new Stamp();
     }
 
-    public static <T, R> List<R> apply(Collection<T> coll, Function<? super T, ? extends R> mapper) {
-        return coll.stream().map(mapper).collect(Collectors.toList());
+    public static <T, R> List<R> forEach_r(Collection<T> collection,
+            Function<? super T, ? extends R> mapper) {
+        return collection.stream().map(mapper).collect(Collectors.toList());
     }
 
-    public static List<String> as_list(String element) {
-        ArrayList<String> recipients = new ArrayList<String>();
+    public static <T> List<T> atleast_1d(T element) {
+        ArrayList<T> recipients = new ArrayList<T>();
         recipients.add(element);
         return recipients;
     }

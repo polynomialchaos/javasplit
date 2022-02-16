@@ -84,7 +84,7 @@ public class Purchase extends Base {
     public LinkedHashMap<String, Object> serialize() {
         LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
         hash_map.put("purchaser", this.purchaser.getName());
-        hash_map.put("recipients", Base.apply(this.recipients.keySet(), a -> a));
+        hash_map.put("recipients", Base.forEach_r(this.recipients.keySet(), a -> a));
         hash_map.put("amount", this.amount);
         hash_map.put("currency", this.currency.name());
         hash_map.put("date", this.date.toString());

@@ -97,7 +97,7 @@ public class Group extends Base {
                 Currency currency = Currency.valueOf((String) gson_purchase.get("currency"));
 
                 Purchase purchase = this.addPurchase(purchaser,
-                        Base.apply(recipients, a -> ((Object) a).toString()),
+                        Base.forEach_r(recipients, a -> ((Object) a).toString()),
                         amount, date, title, currency);
                 purchase.setTime((String) gson_purchase.get("stamp"));
             }
@@ -191,7 +191,7 @@ public class Group extends Base {
         ArrayList<Balance> balances = new ArrayList<Balance>();
 
         // sorted members
-        List<Member> members = Base.apply(this.members.values(), a -> a);
+        List<Member> members = Base.forEach_r(this.members.values(), a -> a);
         Collections.sort(members, new Comparator<Member>() {
             @Override
             public int compare(Member m1, Member m2) {
@@ -301,10 +301,14 @@ public class Group extends Base {
         hash_map.put("name", this.name);
         hash_map.put("description", this.description);
         hash_map.put("currency", this.currency.name());
-        hash_map.put("members", apply(this.members.values(), a -> a.toDict()));
-        hash_map.put("purchases", apply(this.purchases, a -> a.toDict()));
-        hash_map.put("transfers", apply(this.transfers, a -> a.toDict()));
-        hash_map.put("exchange_rates", this.exchange_rates);
+        hash_map.put("members", Base.forEach_r(this.members.values(), a -> a.toDict()));
+        hash_map.put("purchases", Base.forEach_r(this.purchases, a -> a.toDict()));
+        hash_map.put("transfers", Base.forEach_r(this.transfers, a -> a.toDict()));
+        LinkedHashMap<String, Double> exchange_rates = new LinkedHashMap<String, Double>();
+        for (Map.Entry<Currency, Double> entry : this.exchange_rates.entrySet()) {
+            exchange_rates.put(entry.getKey().name(), entry.getValue());
+        }
+        hash_map.put("exchange_rates", exchange_rates);
         return hash_map;
     }
 
