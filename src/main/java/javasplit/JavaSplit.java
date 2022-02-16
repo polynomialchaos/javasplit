@@ -35,14 +35,15 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-@Command(name = "JavaSplit", mixinStandardHelpOptions = true, version = "JavaSplit 1.0", description = "A simple Java package for money pool split development.")
+@Command(name = "JavaSplit", mixinStandardHelpOptions = true, version = "JavaSplit 1.0",
+    description = "A simple Java package for money pool split development.")
 class JavaSplit implements Callable<Integer> {
     Scanner scanner;
 
-    @Option(names = { "-m", "--member" }, description = "Add a member(s) to the group")
+    @Option(names = { "-m", "--member" }, description = "Add member(s) to the group")
     boolean add_member;
 
-    @Option(names = { "-p", "--purchase" }, description = "Add a purchase(s) to the group")
+    @Option(names = { "-p", "--purchase" }, description = "Add purchase(s) to the group")
     boolean add_purchase;
 
     @Option(names = { "-t", "--transfer" }, description = "Add transfer(s) to the group")
