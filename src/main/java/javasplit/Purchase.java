@@ -19,15 +19,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-package jvsplit;
+package javasplit;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import jvsplit.utils.Base;
-import jvsplit.utils.Currency;
-import jvsplit.utils.Stamp;
+import javasplit.utils.Base;
+import javasplit.utils.Currency;
+import javasplit.utils.Stamp;
 
 public class Purchase extends Base {
     protected Group group;

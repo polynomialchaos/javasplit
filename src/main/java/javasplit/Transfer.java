@@ -19,24 +19,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-package jvsplit.utils;
+package javasplit;
 
-public enum Currency {
-    Euro("€"),
-    USD("$");
+import javasplit.utils.Base;
+import javasplit.utils.Currency;
+import javasplit.utils.Stamp;
 
-    private String symbol;
-
-    Currency() {
-        this.symbol = this.name();
-    }
-
-    Currency(String symbol) {
-        this.symbol = symbol;
-    }
-
-    @Override
-    public String toString() {
-        return this.symbol;
+public class Transfer extends Purchase {
+    Transfer(Group group, String purchaser, String recipient, Double amount,
+            Stamp date, String title, Currency currency) {
+        super(group, purchaser, Base.atleast_1d(recipient), amount, date, title, currency);
     }
 }

@@ -8,9 +8,11 @@ dependencies {
 }
 
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     manifest {
         attributes(
-                'Main-Class': 'jvsplit.JavaSplit'
+                'Main-Class': 'javasplit.JavaSplit'
         )
     }
 

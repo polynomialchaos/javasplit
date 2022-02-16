@@ -19,12 +19,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-package jvsplit;
+package javasplit;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import jvsplit.utils.Base;
+import javasplit.utils.Base;
 
 public class Member extends Base {
     private String name;

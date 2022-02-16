@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-package jvsplit;
+package javasplit;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,9 +27,9 @@ import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 
-import jvsplit.utils.Base;
-import jvsplit.utils.Currency;
-import jvsplit.utils.Stamp;
+import javasplit.utils.Base;
+import javasplit.utils.Currency;
+import javasplit.utils.Stamp;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;

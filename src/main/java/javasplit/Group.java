@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-package jvsplit;
+package javasplit;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -35,9 +35,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
-import jvsplit.utils.Base;
-import jvsplit.utils.Currency;
-import jvsplit.utils.Stamp;
+import javasplit.utils.Base;
+import javasplit.utils.Currency;
+import javasplit.utils.Stamp;
 
 public class Group extends Base {
     private String name;

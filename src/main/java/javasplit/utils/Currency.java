@@ -19,30 +19,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-package jvsplit;
+package javasplit.utils;
 
-import jvsplit.utils.Currency;
-import jvsplit.utils.Stamp;
+public enum Currency {
+    Euro("€"),
+    USD("$");
 
-public class Balance extends Transfer {
-    Balance(Group group, String purchaser, String recipient, Double amount,
-            Stamp date, Currency currency) {
-        super(group, purchaser, recipient, amount, date, "Pending balance", currency);
+    private String symbol;
+
+    Currency() {
+        this.symbol = this.name();
     }
 
-    public void balance_out() {
-        String recipient  = this.recipients.values().iterator().next().getName();
-        this.group.addTransfer(this.purchaser.getName(), recipient, this.amount,
-            this.date, this.title, this.currency);
-    }
-
-    @Override
-    protected void link() {
-        // do not link
+    Currency(String symbol) {
+        this.symbol = symbol;
     }
 
     @Override
-    protected void unlink() {
-        // nothing to unlink
+    public String toString() {
+        return this.symbol;
     }
 }
