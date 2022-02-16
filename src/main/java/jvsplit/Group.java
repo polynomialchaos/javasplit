@@ -125,13 +125,12 @@ public class Group extends Base {
         }
     }
 
-    Group(String name, String description,
-            Currency currency, LinkedHashMap<Currency, Double> exchange_rates) {
+    Group(String name, String description, Currency currency) {
         this.name = name;
         this.description = description;
         this.currency = currency;
-        this.exchange_rates = exchange_rates;
 
+        this.exchange_rates = new LinkedHashMap<Currency, Double>();
         this.members = new LinkedHashMap<String, Member>();
         this.purchases = new ArrayList<Purchase>();
         this.transfers = new ArrayList<Transfer>();
@@ -185,6 +184,18 @@ public class Group extends Base {
         }
 
         return this.members.get(name);
+    }
+
+    List<String> getMemberNames() {
+        return Base.forEach_r(this.members.entrySet(), a -> a.getKey());
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getNumberOfMembers() {
+        return this.members.size();
     }
 
     public List<Balance> getPendingBalances() {
