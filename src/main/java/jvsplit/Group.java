@@ -26,7 +26,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -43,14 +43,14 @@ public class Group extends Base {
     private String name;
     private String description;
     private Currency currency;
-    private HashMap<Currency, Double> exchange_rates;
-    private HashMap<String, Member> members;
+    private LinkedHashMap<Currency, Double> exchange_rates;
+    private LinkedHashMap<String, Member> members;
     private ArrayList<Purchase> purchases;
     private ArrayList<Transfer> transfers;
 
     Group(String path) {
-        this.exchange_rates = new HashMap<Currency, Double>();
-        this.members = new HashMap<String, Member>();
+        this.exchange_rates = new LinkedHashMap<Currency, Double>();
+        this.members = new LinkedHashMap<String, Member>();
         this.purchases = new ArrayList<Purchase>();
         this.transfers = new ArrayList<Transfer>();
 
@@ -126,13 +126,13 @@ public class Group extends Base {
     }
 
     Group(String name, String description,
-            Currency currency, HashMap<Currency, Double> exchange_rates) {
+            Currency currency, LinkedHashMap<Currency, Double> exchange_rates) {
         this.name = name;
         this.description = description;
         this.currency = currency;
         this.exchange_rates = exchange_rates;
 
-        this.members = new HashMap<String, Member>();
+        this.members = new LinkedHashMap<String, Member>();
         this.purchases = new ArrayList<Purchase>();
         this.transfers = new ArrayList<Transfer>();
     }
@@ -199,7 +199,7 @@ public class Group extends Base {
             }
         });
 
-        HashMap<Member, Double> bal_add = new HashMap<Member, Double>();
+        LinkedHashMap<Member, Double> bal_add = new LinkedHashMap<Member, Double>();
         for (Member member : members) {
             bal_add.put(member, 0.0);
         }
@@ -296,15 +296,15 @@ public class Group extends Base {
     }
 
     @Override
-    public HashMap<String, Object> serialize() {
-        HashMap<String, Object> hash_map = new HashMap<String, Object>();
+    public LinkedHashMap<String, Object> serialize() {
+        LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
         hash_map.put("name", this.name);
         hash_map.put("description", this.description);
         hash_map.put("currency", this.currency.name());
-        hash_map.put("exchange_rates", this.exchange_rates);
         hash_map.put("members", apply(this.members.values(), a -> a.toDict()));
         hash_map.put("purchases", apply(this.purchases, a -> a.toDict()));
         hash_map.put("transfers", apply(this.transfers, a -> a.toDict()));
+        hash_map.put("exchange_rates", this.exchange_rates);
         return hash_map;
     }
 

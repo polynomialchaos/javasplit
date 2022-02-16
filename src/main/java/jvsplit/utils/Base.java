@@ -24,7 +24,7 @@ package jvsplit.utils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -54,12 +54,12 @@ public class Base {
         this.stamp.setTime(time);
     }
 
-    public HashMap<String, Object> serialize() {
+    public LinkedHashMap<String, Object> serialize() {
         throw new UnsupportedOperationException();
     }
 
-    public HashMap<String, Object> toDict() {
-        HashMap<String, Object> tmp = serialize();
+    public LinkedHashMap<String, Object> toDict() {
+        LinkedHashMap<String, Object> tmp = serialize();
         tmp.put("stamp", this.stamp.toString());
         return tmp;
     }

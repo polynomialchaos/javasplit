@@ -22,7 +22,7 @@
 package jvsplit;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import jvsplit.utils.Base;
 
@@ -64,8 +64,8 @@ public class Member extends Base {
     }
 
     @Override
-    public HashMap<String, Object> serialize() {
-        HashMap<String, Object> hash_map = new HashMap<String, Object>();
+    public LinkedHashMap<String, Object> serialize() {
+        LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
         hash_map.put("name", this.name);
         return hash_map;
     }

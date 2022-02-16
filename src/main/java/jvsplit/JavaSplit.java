@@ -26,6 +26,6 @@ public class JavaSplit {
 
         Group group = new Group("misc/example.json");
         group.print();
-        // group.save("test.json");
+        group.save("test.json");
     }
 }

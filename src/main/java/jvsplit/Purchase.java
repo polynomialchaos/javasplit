@@ -21,8 +21,8 @@
 // SOFTWARE.
 package jvsplit;
 
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import jvsplit.utils.Base;
@@ -32,7 +32,7 @@ import jvsplit.utils.Stamp;
 public class Purchase extends Base {
     protected Group group;
     protected Member purchaser;
-    protected HashMap<String, Member> recipients;
+    protected LinkedHashMap<String, Member> recipients;
     protected Double amount;
     protected Stamp date;
     protected String title;
@@ -81,14 +81,14 @@ public class Purchase extends Base {
     }
 
     @Override
-    public HashMap<String, Object> serialize() {
-        HashMap<String, Object> hash_map = new HashMap<String, Object>();
+    public LinkedHashMap<String, Object> serialize() {
+        LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
         hash_map.put("purchaser", this.purchaser.getName());
         hash_map.put("recipients", Base.apply(this.recipients.keySet(), a -> a));
         hash_map.put("amount", this.amount);
+        hash_map.put("currency", this.currency.name());
         hash_map.put("date", this.date.toString());
         hash_map.put("title", this.title);
-        hash_map.put("currency", this.currency.name());
         return hash_map;
     }
 
@@ -97,7 +97,7 @@ public class Purchase extends Base {
     }
 
     private void setRecipients(List<String> recipients) {
-        this.recipients = new HashMap<String, Member>();
+        this.recipients = new LinkedHashMap<String, Member>();
         for (String recipient : recipients) {
             this.recipients.put(recipient, this.group.getMemberByName(recipient));
         }
