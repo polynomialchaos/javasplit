@@ -1,5 +1,5 @@
 {
-  "name": "jvsplit",
+  "name": "javasplit",
   "description": "A simple Java package for money pool split development.",
   "currency": "Euro",
   "members": [
