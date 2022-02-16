@@ -23,9 +23,8 @@ package jvsplit;
 
 public class JavaSplit {
     public static void main(String[] args) {
-
         Group group = new Group("misc/example.json");
         group.print();
-        group.save("test.json");
+        group.save("build/test.json");
     }
 }
