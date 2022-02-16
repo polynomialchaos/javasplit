@@ -21,17 +21,16 @@
 // SOFTWARE.
 package jvsplit;
 
-import java.security.KeyException;
 import jvsplit.utils.Currency;
 import jvsplit.utils.Stamp;
 
 public class Balance extends Transfer {
     Balance(Group group, String purchaser, String recipient, Double amount,
-            Stamp date, Currency currency) throws KeyException {
+            Stamp date, Currency currency) {
         super(group, purchaser, recipient, amount, date, "Pending balance", currency);
     }
 
-    public void balance_out() throws KeyException {
+    public void balance_out() {
         String recipient  = this.recipients.values().iterator().next().getName();
         this.group.addTransfer(this.purchaser.getName(), recipient, this.amount,
             this.date, this.title, this.currency);

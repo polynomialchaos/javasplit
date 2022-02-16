@@ -25,12 +25,7 @@ public class JavaSplit {
     public static void main(String[] args) {
 
         Group group = new Group("misc/example.json");
-
-        try {
-            group.print();
-            // group.save("test.json");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        group.print();
+        // group.save("test.json");
     }
 }

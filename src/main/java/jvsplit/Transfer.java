@@ -21,13 +21,12 @@
 // SOFTWARE.
 package jvsplit;
 
-import java.security.KeyException;
 import jvsplit.utils.Currency;
 import jvsplit.utils.Stamp;
 
 public class Transfer extends Purchase {
     Transfer(Group group, String purchaser, String recipient, Double amount,
-            Stamp date, String title, Currency currency) throws KeyException {
+            Stamp date, String title, Currency currency) {
         super(group, purchaser, as_list(recipient), amount, date, title, currency);
     }
 }

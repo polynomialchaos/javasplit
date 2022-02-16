@@ -21,7 +21,6 @@
 // SOFTWARE.
 package jvsplit;
 
-import java.security.KeyException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +39,7 @@ public class Purchase extends Base {
     protected Currency currency;
 
     Purchase(Group group, String purchaser, List<String> recipients, Double amount,
-            Stamp date, String title, Currency currency) throws KeyException {
+            Stamp date, String title, Currency currency) {
         this.group = group;
         this.setPurchaser(purchaser);
         this.setRecipients(recipients);
@@ -52,11 +51,11 @@ public class Purchase extends Base {
         this.link();
     }
 
-    public Double getAmount() throws KeyException {
+    public Double getAmount() {
         return this.group.exchange(this.amount, this.currency);
     }
 
-    public Double getAmountPerMember() throws KeyException {
+    public Double getAmountPerMember() {
         return this.getAmount() / this.numberOfRecipients();
     }
 
@@ -93,11 +92,11 @@ public class Purchase extends Base {
         return hash_map;
     }
 
-    private void setPurchaser(String purchaser) throws KeyException {
+    private void setPurchaser(String purchaser) {
         this.purchaser = this.group.getMemberByName(purchaser);
     }
 
-    private void setRecipients(List<String> recipients) throws KeyException {
+    private void setRecipients(List<String> recipients) {
         this.recipients = new HashMap<String, Member>();
         for (String recipient : recipients) {
             this.recipients.put(recipient, this.group.getMemberByName(recipient));

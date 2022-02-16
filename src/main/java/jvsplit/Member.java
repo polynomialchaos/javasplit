@@ -21,7 +21,6 @@
 // SOFTWARE.
 package jvsplit;
 
-import java.security.KeyException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import jvsplit.utils.Base;
@@ -39,7 +38,7 @@ public class Member extends Base {
         this.participations.add(purchase);
     }
 
-    public double balance() throws KeyException {
+    public double balance() {
         double balance = 0.0;
 
         for (Purchase participation : this.participations) {

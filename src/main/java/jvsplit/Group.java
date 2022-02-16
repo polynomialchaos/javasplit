@@ -23,13 +23,20 @@ package jvsplit;
 
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.Writer;
-import java.rmi.server.RemoteRef;
-import java.security.KeyException;
+import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.lang.Math;
+
+import javax.sound.sampled.ReverbType;
+
+import java.util.Comparator;
+import java.util.Collections;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -137,13 +144,13 @@ public class Group extends Base {
         this.transfers = new ArrayList<Transfer>();
     }
 
-    Member addMember(String name) throws KeyException {
+    Member addMember(String name) {
         if (name.isBlank()) {
-            throw new KeyException("Empty member name provided!");
+            throw new RuntimeException("Empty member name provided!");
         }
 
         if (this.members.containsKey(name)) {
-            throw new KeyException("Duplicate member name provided!");
+            throw new RuntimeException("Duplicate member name provided!");
         }
 
         Member member = new Member(name);
@@ -153,7 +160,7 @@ public class Group extends Base {
     }
 
     Purchase addPurchase(String purchaser, List<String> recipients, Double amount,
-            Stamp date, String title, Currency currency) throws KeyException {
+            Stamp date, String title, Currency currency) {
         Purchase purchase = new Purchase(this, purchaser, recipients, amount, date, title, currency);
         this.purchases.add(purchase);
 
@@ -161,60 +168,76 @@ public class Group extends Base {
     }
 
     Transfer addTransfer(String purchaser, String recipient, Double amount,
-            Stamp date, String title, Currency currency) throws KeyException {
+            Stamp date, String title, Currency currency) {
         Transfer transfer = new Transfer(this, purchaser, recipient, amount, date, title, currency);
         this.transfers.add(transfer);
 
         return transfer;
     }
 
-    double exchange(double amount, Currency currency) throws KeyException {
+    double exchange(double amount, Currency currency) {
         if (currency.equals(this.currency)) {
             return amount;
         } else {
             if (!this.exchange_rates.containsKey(currency)) {
-                throw new KeyException("No valid exchange rate found!");
+                throw new RuntimeException("No valid exchange rate found!");
             }
             return amount / this.exchange_rates.get(currency);
         }
     }
 
-    Member getMemberByName(String name) throws KeyException {
+    Member getMemberByName(String name) {
         if (!this.members.containsKey(name)) {
-            throw new KeyException(String.format("No member with name \"%s\"!", name));
+            throw new RuntimeException(String.format("No member with name \"%s\"!", name));
         }
 
         return this.members.get(name);
     }
 
-    public List<Balance> getPendingBalances() throws KeyException {
+    public List<Balance> getPendingBalances() {
         ArrayList<Balance> balances = new ArrayList<Balance>();
 
-        // ranked = sorted(self.members.values(), key=(lambda x: x.balance))
-        // balance_add = {x.name: 0 for x in ranked}
+        // sorted members
+        List<Member> members = Base.apply(this.members.values(), a -> a);
+        Collections.sort(members, new Comparator<Member>() {
+            @Override
+            public int compare(Member m1, Member m2) {
+                return Double.compare(m1.balance(), m2.balance());
+            }
+        });
 
-        // for sender in ranked:
-        // for receiver in reversed(ranked):
-        // if sender == receiver:
-        // continue
-        // sender_balance = sender.balance + balance_add[sender.name]
-        // receiver_balance = receiver.balance + \
-        // balance_add[receiver.name]
+        HashMap<Member, Double> bal_add = new HashMap<Member, Double>();
+        for (Member member : members) {
+            bal_add.put(member, 0.0);
+        }
 
-        // if receiver_balance > 0:
-        // balance = min(abs(sender_balance), receiver_balance)
-        // balance_add[sender.name] += balance
-        // balance_add[receiver.name] -= balance
+        for (Member sender : members) {
+            ListIterator<Member> listIterator = members.listIterator(members.size());
 
-        // balances.append(
-        // Balance(self, sender.name, receiver.name,
-        // balance, currency=self.currency)
-        // )
+            // Iterate in reverse.
+            while(listIterator.hasPrevious()) {
+                Member receiver = listIterator.previous();
+                if (sender == receiver) continue;
+
+                Double sender_balance = sender.balance() + bal_add.get(sender);
+                Double receiver_balance = receiver.balance() + bal_add.get(receiver);
+
+                if (receiver_balance > 0.0) {
+                    Double bal = Math.min(Math.abs(sender_balance), receiver_balance);
+                    bal_add.put(sender, bal_add.get(sender) + bal);
+                    bal_add.put(receiver, bal_add.get(receiver) - bal);
+
+                    Balance balance = new Balance(this, sender.getName(),
+                        receiver.getName(), bal, new Stamp(), this.currency);
+                    balances.add(balance);
+                }
+            }
+        }
 
         return balances;
     }
 
-    public void print() throws KeyException {
+    public void print() {
         int length = 80;
         String mainrule = "=".repeat(length);
         String rule = "-".repeat(length);
@@ -291,7 +314,7 @@ public class Group extends Base {
         return hash_map;
     }
 
-    public double turnover() throws KeyException {
+    public double turnover() {
         double turnover = 0.0;
         for (Purchase purchase : this.purchases) {
             turnover += purchase.getAmount();
