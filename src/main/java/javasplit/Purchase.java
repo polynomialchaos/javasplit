@@ -32,7 +32,7 @@ import javasplit.utils.Stamp;
 public class Purchase extends Base {
     protected Group group;
     protected Member purchaser;
-    protected LinkedHashMap<String, Member> recipients;
+    protected LinkedHashMap<String, Member> recipients = new LinkedHashMap<String, Member>();
     protected Double amount;
     protected Stamp date;
     protected String title;
@@ -97,7 +97,6 @@ public class Purchase extends Base {
     }
 
     private void setRecipients(List<String> recipients) {
-        this.recipients = new LinkedHashMap<String, Member>();
         for (String recipient : recipients) {
             this.recipients.put(recipient, this.group.getMemberByName(recipient));
         }
@@ -117,7 +116,7 @@ public class Purchase extends Base {
         members.add(this.purchaser);
 
         for (Member member : members) {
-            member.removePurchase(this);
+            member.removeParticipation(this);
         }
     }
 }

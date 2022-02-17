@@ -28,20 +28,18 @@ import javasplit.utils.Base;
 
 public class Member extends Base {
     private String name;
-    private ArrayList<Purchase> participations;
+    private ArrayList<Purchase> participations = new ArrayList<Purchase>();
 
     Member(String name) {
         this.name = name;
-        this.participations = new ArrayList<Purchase>();
     }
 
     public void addParticipation(Purchase purchase) {
         this.participations.add(purchase);
     }
 
-    public double balance() {
+    public double getBalance() {
         double balance = 0.0;
-
         for (Purchase participation : this.participations) {
             if (participation.isPurchaser(this.name)) {
                 balance += participation.getAmount();
@@ -59,7 +57,7 @@ public class Member extends Base {
         return name;
     }
 
-    public void removePurchase(Purchase participation) {
+    public void removeParticipation(Purchase participation) {
         this.participations.remove(participation);
     }
 

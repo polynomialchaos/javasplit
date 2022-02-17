@@ -47,6 +47,10 @@ public class Base {
         return recipients;
     }
 
+    public static <T> List<T> atleast_1d(List<T> element) {
+        return element;
+    }
+
     public void setTime(String time_string) {
         this.stamp.setTime(time_string);
     }
@@ -56,7 +60,7 @@ public class Base {
     }
 
     public LinkedHashMap<String, Object> serialize() {
-        throw new UnsupportedOperationException();
+        throw new RuntimeException("Not implemented operation!");
     }
 
     public LinkedHashMap<String, Object> toDict() {

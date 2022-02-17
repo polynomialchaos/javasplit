@@ -30,7 +30,7 @@ public class Balance extends Transfer {
         super(group, purchaser, recipient, amount, date, "Pending balance", currency);
     }
 
-    public void balance_out() {
+    public void toTransfer() {
         String recipient  = this.recipients.values().iterator().next().getName();
         this.group.addTransfer(this.purchaser.getName(), recipient, this.amount,
             this.date, this.title, this.currency);

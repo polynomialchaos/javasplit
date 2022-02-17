@@ -43,17 +43,12 @@ public class Group extends Base {
     private String name;
     private String description;
     private Currency currency;
-    private LinkedHashMap<Currency, Double> exchange_rates;
-    private LinkedHashMap<String, Member> members;
-    private ArrayList<Purchase> purchases;
-    private ArrayList<Transfer> transfers;
+    private LinkedHashMap<Currency, Double> exchange_rates = new LinkedHashMap<Currency, Double>();
+    private LinkedHashMap<String, Member> members = new LinkedHashMap<String, Member>();
+    private ArrayList<Purchase> purchases = new ArrayList<Purchase>();
+    private ArrayList<Transfer> transfers = new ArrayList<Transfer>();
 
     Group(String path) {
-        this.exchange_rates = new LinkedHashMap<Currency, Double>();
-        this.members = new LinkedHashMap<String, Member>();
-        this.purchases = new ArrayList<Purchase>();
-        this.transfers = new ArrayList<Transfer>();
-
         try {
             Gson gson = new Gson();
             JsonReader reader = new JsonReader(new FileReader(path));
@@ -129,11 +124,6 @@ public class Group extends Base {
         this.name = name;
         this.description = description;
         this.currency = currency;
-
-        this.exchange_rates = new LinkedHashMap<Currency, Double>();
-        this.members = new LinkedHashMap<String, Member>();
-        this.purchases = new ArrayList<Purchase>();
-        this.transfers = new ArrayList<Transfer>();
     }
 
     Member addMember(String name) {
@@ -206,7 +196,7 @@ public class Group extends Base {
         Collections.sort(members, new Comparator<Member>() {
             @Override
             public int compare(Member m1, Member m2) {
-                return Double.compare(m1.balance(), m2.balance());
+                return Double.compare(m1.getBalance(), m2.getBalance());
             }
         });
 
@@ -224,8 +214,8 @@ public class Group extends Base {
                 if (sender == receiver)
                     continue;
 
-                Double sender_balance = sender.balance() + bal_add.get(sender);
-                Double receiver_balance = receiver.balance() + bal_add.get(receiver);
+                Double sender_balance = sender.getBalance() + bal_add.get(sender);
+                Double receiver_balance = receiver.getBalance() + bal_add.get(receiver);
 
                 if (receiver_balance > 0.0) {
                     Double bal = Math.min(Math.abs(sender_balance), receiver_balance);
@@ -242,6 +232,15 @@ public class Group extends Base {
         return balances;
     }
 
+    public double getTurnover() {
+        double turnover = 0.0;
+        for (Purchase purchase : this.purchases) {
+            turnover += purchase.getAmount();
+        }
+
+        return turnover;
+    }
+
     public void print() {
         int length = 80;
         String mainrule = "=".repeat(length);
@@ -254,7 +253,7 @@ public class Group extends Base {
         }
 
         System.out.println(mainrule);
-        System.out.println(String.format(" * Turnover: %.2f%s", this.turnover(), this.currency));
+        System.out.println(String.format(" * Turnover: %.2f%s", this.getTurnover(), this.currency));
 
         if (!this.exchange_rates.isEmpty()) {
             System.out.println(rule);
@@ -294,9 +293,8 @@ public class Group extends Base {
     }
 
     public void save(String path) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             FileWriter writer = new FileWriter(path);
             gson.toJson(this.toDict(), writer);
             writer.flush();
@@ -308,6 +306,11 @@ public class Group extends Base {
 
     @Override
     public LinkedHashMap<String, Object> serialize() {
+        LinkedHashMap<String, Double> exchange_rates = new LinkedHashMap<String, Double>();
+        for (Map.Entry<Currency, Double> entry : this.exchange_rates.entrySet()) {
+            exchange_rates.put(entry.getKey().name(), entry.getValue());
+        }
+
         LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
         hash_map.put("name", this.name);
         hash_map.put("description", this.description);
@@ -315,20 +318,8 @@ public class Group extends Base {
         hash_map.put("members", Base.forEach_r(this.members.values(), a -> a.toDict()));
         hash_map.put("purchases", Base.forEach_r(this.purchases, a -> a.toDict()));
         hash_map.put("transfers", Base.forEach_r(this.transfers, a -> a.toDict()));
-        LinkedHashMap<String, Double> exchange_rates = new LinkedHashMap<String, Double>();
-        for (Map.Entry<Currency, Double> entry : this.exchange_rates.entrySet()) {
-            exchange_rates.put(entry.getKey().name(), entry.getValue());
-        }
         hash_map.put("exchange_rates", exchange_rates);
+
         return hash_map;
-    }
-
-    public double turnover() {
-        double turnover = 0.0;
-        for (Purchase purchase : this.purchases) {
-            turnover += purchase.getAmount();
-        }
-
-        return turnover;
     }
 }
