@@ -5,6 +5,7 @@ repositories { mavenCentral() }
 dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'info.picocli:picocli:4.6.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
 
 jar {
@@ -18,5 +19,13 @@ jar {
 
     from {
         configurations.compileClasspath.filter { it.exists() }.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        showStandardStreams = true
     }
 }
