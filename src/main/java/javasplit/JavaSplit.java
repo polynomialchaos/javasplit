@@ -23,12 +23,11 @@ package javasplit;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.Callable;
-import java.util.function.Function;
 
 import javasplit.utils.Base;
 import javasplit.utils.Currency;
+import javasplit.utils.InputScanner;
 import javasplit.utils.Stamp;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -37,7 +36,6 @@ import picocli.CommandLine.Parameters;
 
 @Command(name = "JavaSplit", mixinStandardHelpOptions = true, version = "JavaSplit 1.0", description = "A simple Java package for money pool split development.")
 class JavaSplit implements Callable<Integer> {
-    Scanner scanner;
 
     @Option(names = { "-m", "--member" }, description = "Add member(s) to the group")
     boolean add_member;
@@ -54,15 +52,14 @@ class JavaSplit implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        scanner = new Scanner(System.in); // Create a Scanner object
-
+        InputScanner scanner = new InputScanner();
         Group group;
         if (group_path != null) {
             group = new Group(group_path);
         } else {
-            String inp_title = getUserInput("Group title", "Untitled", null, a -> a);
-            String inp_description = getUserInput("Group description", "", null, a -> a);
-            Currency inp_currency = getUserInput("Group currency", Currency.Euro.name(),
+            String inp_title = scanner.get("Group title", "Untitled", a -> a);
+            String inp_description = scanner.get("Group description", "", a -> a);
+            Currency inp_currency = scanner.get("Group currency", Currency.Euro.name(),
                     Base.forEach_r(List.of(Currency.values()), a -> a.name()),
                     a -> Currency.valueOf(a));
 
@@ -72,7 +69,7 @@ class JavaSplit implements Callable<Integer> {
         // add member(s)
         if (add_member || group.getNumberOfMembers() == 0) {
             while (true) {
-                String inp_name = getUserInput("Member name (Enter to continue)", "", null, a -> a);
+                String inp_name = scanner.get("Member name (Enter to continue)", "", a -> a);
 
                 if (inp_name.isBlank()) {
                     break;
@@ -90,23 +87,23 @@ class JavaSplit implements Callable<Integer> {
 
             List<String> members = group.getMemberNames();
             while (true) {
-                String inp_title = getUserInput("Purchase title", "Untitled", null, a -> a);
-                String inp_purchaser = getUserInput("Purchaser", members.get(0), members, a -> a);
-                List<String> inp_recipients = getUserInput("Purchase recipients (seperated by ;)",
+                String inp_title = scanner.get("Purchase title", "Untitled", a -> a);
+                String inp_purchaser = scanner.get("Purchaser", members.get(0), members, a -> a);
+                List<String> inp_recipients = scanner.get("Purchase recipients (seperated by ;)",
                         String.join(";", members), members,
                         a -> (List<String>) Arrays.asList(a.split(";")));
-                Double inp_amount = getUserInput("Purchase amount", null, null,
+                Double inp_amount = scanner.get("Purchase amount",
                         a -> Double.parseDouble(a));
-                Currency inp_currency = getUserInput("Purchase currency", Currency.Euro.name(),
+                Currency inp_currency = scanner.get("Purchase currency", Currency.Euro.name(),
                         Base.forEach_r(List.of(Currency.values()), a -> a.name()),
                         a -> Currency.valueOf(a));
-                Stamp inp_date = getUserInput("Purchase date", new Stamp().toString(), null,
+                Stamp inp_date = scanner.get("Purchase date", new Stamp().toString(),
                         a -> new Stamp(a));
 
                 group.addPurchase(inp_purchaser, inp_recipients,
                         inp_amount, inp_date, inp_title, inp_currency);
 
-                if (!getUserInput("Add another purchase", "n", List.of("n", "y"),
+                if (!scanner.get("Add another purchase", "n", List.of("n", "y"),
                         a -> a.toLowerCase() == "y")) {
                     break;
                 }
@@ -121,22 +118,22 @@ class JavaSplit implements Callable<Integer> {
 
             List<String> members = group.getMemberNames();
             while (true) {
-                String inp_title = getUserInput("Transfer title", "Untitled", null, a -> a);
-                String inp_purchaser = getUserInput("Purchaser", members.get(0), members, a -> a);
-                String inp_recipient = getUserInput("Transfer recipient", members.get(0), members,
+                String inp_title = scanner.get("Transfer title", "Untitled", a -> a);
+                String inp_purchaser = scanner.get("Purchaser", members.get(0), members, a -> a);
+                String inp_recipient = scanner.get("Transfer recipient", members.get(0), members,
                         a -> a);
-                Double inp_amount = getUserInput("Transfer amount", null, null,
+                Double inp_amount = scanner.get("Transfer amount",
                         a -> Double.parseDouble(a));
-                Currency inp_currency = getUserInput("Transfer currency", Currency.Euro.name(),
+                Currency inp_currency = scanner.get("Transfer currency", Currency.Euro.name(),
                         Base.forEach_r(List.of(Currency.values()), a -> a.name()),
                         a -> Currency.valueOf(a));
-                Stamp inp_date = getUserInput("Transfer date", new Stamp().toString(), null,
+                Stamp inp_date = scanner.get("Transfer date", new Stamp().toString(),
                         a -> new Stamp(a));
 
                 group.addTransfer(inp_purchaser, inp_recipient,
                         inp_amount, inp_date, inp_title, inp_currency);
 
-                if (!getUserInput("Add another transfer", "n", List.of("n", "y"),
+                if (!scanner.get("Add another transfer", "n", List.of("n", "y"),
                         a -> a.toLowerCase() == "y")) {
                     break;
                 }
@@ -150,41 +147,20 @@ class JavaSplit implements Callable<Integer> {
         String file_path = group_path;
         if (group_path == null) {
             String tmp = group.getName().toLowerCase().replace(" ", "_");
-            file_path = getUserInput("Provide file name", tmp, null, a -> a);
+            file_path = scanner.get("Provide file name", tmp, a -> a);
         }
 
         group.save(file_path);
-        scanner.close();
+        scanner.finish();
 
         return 0;
     }
 
-    // this example implements Callable, so parsing, error handling and handling user
+    // this example implements Callable, so parsing, error handling and handling
+    // user
     // requests for usage help or version help can be done with one line of code.
     public static void main(String... args) {
         int exitCode = new CommandLine(new JavaSplit()).execute(args);
         System.exit(exitCode);
-    }
-
-    public <T> T getUserInput(String description, String default_value,
-            List<String> options, Function<? super String, ? extends T> functor) {
-
-        String des_str = description;
-        if (default_value != null) {
-            des_str = String.format("%s [%s]", des_str, default_value);
-        }
-
-        if (options != null) {
-            des_str = String.format("%s (%s)", des_str, String.join(",", Base.forEach_r(options, a -> a)));
-        }
-
-        System.out.print(String.format("%s: ", des_str));
-        String user_input = scanner.nextLine(); // Read user input
-
-        if (user_input.isBlank() && default_value == null) {
-            throw new RuntimeException("Required input not provided!");
-        }
-
-        return functor.apply(user_input.isBlank() ? default_value : user_input);
     }
 }
