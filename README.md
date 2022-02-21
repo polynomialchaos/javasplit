@@ -7,12 +7,16 @@ A Java package for money pool split development.
 To generate an executable of the **JavaSplit** package simply call
 
 ```sh
-dotnet publish -c Release
+gradle build
 ```
 
 ## Usage
 
 The **JavaSplit** application either loads an existing case from the specified file (JSON format) or generates a new one if no file is provided.
+
+```sh
+java -jar build/libs/javasplit.jar
+```
 
 The user hase the options to
 
