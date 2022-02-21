@@ -34,7 +34,9 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-@Command(name = "JavaSplit", mixinStandardHelpOptions = true, version = "JavaSplit 1.0", description = "A simple Java package for money pool split development.")
+@Command(name = "JavaSplit", mixinStandardHelpOptions = true,
+    version = "1.0.0",
+    description = "A simple Java package for money pool split development.")
 class JavaSplit implements Callable<Integer> {
 
     @Option(names = { "-m", "--member" }, description = "Add member(s) to the group")
