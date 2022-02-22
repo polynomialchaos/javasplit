@@ -118,8 +118,8 @@ public class TestUtils {
 
         // Test: raise DateTimeParseException
         try {
-            String date_string = "01.02.22";
-            stamp_2.setTime(date_string);
+            String false_date_string = "01.02.22";
+            stamp_2.setTime(false_date_string);
             throw new AssertionError("Exception not captured!");
         } catch (DateTimeParseException e) {
             System.out.println(String.format("Catched: %s!", e.getClass().getName()));
