@@ -39,7 +39,7 @@ import javasplit.utils.Stamp;
 
 public class TestGroup {
     private static String path_1 = "src/test/java/res/javasplit.json";
-    private static String path_2 = "build/test_group.json";
+    private static String path_2 = ".gradle/test_group.json";
 
     @Test
     void testGroup() {
