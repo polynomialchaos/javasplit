@@ -22,12 +22,7 @@
 package javasplit.utils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Base {
     private Stamp stamp;
@@ -36,36 +31,27 @@ public class Base {
         stamp = new Stamp();
     }
 
-    public static <T, R> List<R> forEach_r(Collection<T> collection,
-            Function<? super T, ? extends R> mapper) {
-        return collection.stream().map(mapper).collect(Collectors.toList());
-    }
-
-    public static <T> List<T> atleast_1d(T element) {
-        ArrayList<T> recipients = new ArrayList<T>();
-        recipients.add(element);
-        return recipients;
-    }
-
-    public static <T> List<T> atleast_1d(List<T> element) {
-        return element;
-    }
-
     public void setTime(String time_string) {
-        this.stamp.setTime(time_string);
+        stamp.setTime(time_string);
     }
 
     public void setTime(LocalDateTime time) {
-        this.stamp.setTime(time);
+        stamp.setTime(time);
     }
 
-    public LinkedHashMap<String, Object> serialize() {
-        throw new RuntimeException("Not implemented operation!");
+    protected LinkedHashMap<String, Object> serialize() {
+        LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
+        return hash_map;
     }
 
-    public LinkedHashMap<String, Object> toDict() {
+    public final LinkedHashMap<String, Object> toDict() {
         LinkedHashMap<String, Object> tmp = serialize();
-        tmp.put("stamp", this.stamp.toString());
+        tmp.put("stamp", stamp.toString());
         return tmp;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("<%s stamp=%s>", getClass().getName(), stamp.toString());
     }
 }

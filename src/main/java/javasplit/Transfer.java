@@ -21,13 +21,13 @@
 // SOFTWARE.
 package javasplit;
 
-import javasplit.utils.Base;
 import javasplit.utils.Currency;
 import javasplit.utils.Stamp;
+import javasplit.utils.Utils;
 
 public class Transfer extends Purchase {
-    Transfer(Group group, String purchaser, String recipient, Double amount,
-            Stamp date, String title, Currency currency) {
-        super(group, purchaser, Base.atleast_1d(recipient), amount, date, title, currency);
+    Transfer(Group group, String title, String purchaser, String recipient,
+            Double amount, Currency currency, Stamp date) {
+        super(group, title, purchaser, Utils.atLeast1D(recipient), amount, currency, date);
     }
 }

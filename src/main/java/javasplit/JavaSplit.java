@@ -25,14 +25,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import javasplit.utils.Base;
-import javasplit.utils.Currency;
-import javasplit.utils.InputScanner;
-import javasplit.utils.Stamp;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
+
+import javasplit.utils.Base;
+import javasplit.utils.Currency;
+import javasplit.utils.InputScanner;
+import javasplit.utils.Stamp;
+import javasplit.utils.Utils;
 
 @Command(name = "JavaSplit", mixinStandardHelpOptions = true,
     version = "1.0.0",
@@ -62,7 +64,7 @@ class JavaSplit implements Callable<Integer> {
             String inp_title = scanner.get("Group title", "Untitled", a -> a);
             String inp_description = scanner.get("Group description", "", a -> a);
             Currency inp_currency = scanner.get("Group currency", Currency.Euro.name(),
-                    Base.forEach_r(List.of(Currency.values()), a -> a.name()),
+                    Utils.convertAll(List.of(Currency.values()), a -> a.name()),
                     a -> Currency.valueOf(a));
 
             group = new Group(inp_title, inp_description, inp_currency);
@@ -97,13 +99,13 @@ class JavaSplit implements Callable<Integer> {
                 Double inp_amount = scanner.get("Purchase amount",
                         a -> Double.parseDouble(a));
                 Currency inp_currency = scanner.get("Purchase currency", Currency.Euro.name(),
-                        Base.forEach_r(List.of(Currency.values()), a -> a.name()),
+                        Utils.convertAll(List.of(Currency.values()), a -> a.name()),
                         a -> Currency.valueOf(a));
                 Stamp inp_date = scanner.get("Purchase date", new Stamp().toString(),
                         a -> new Stamp(a));
 
-                group.addPurchase(inp_purchaser, inp_recipients,
-                        inp_amount, inp_date, inp_title, inp_currency);
+                group.addPurchase(inp_title, inp_purchaser, inp_recipients,
+                        inp_amount, inp_currency, inp_date);
 
                 if (!scanner.get("Add another purchase", "n", List.of("n", "y"),
                         a -> a.toLowerCase() == "y")) {
@@ -127,13 +129,13 @@ class JavaSplit implements Callable<Integer> {
                 Double inp_amount = scanner.get("Transfer amount",
                         a -> Double.parseDouble(a));
                 Currency inp_currency = scanner.get("Transfer currency", Currency.Euro.name(),
-                        Base.forEach_r(List.of(Currency.values()), a -> a.name()),
+                        Utils.convertAll(List.of(Currency.values()), a -> a.name()),
                         a -> Currency.valueOf(a));
                 Stamp inp_date = scanner.get("Transfer date", new Stamp().toString(),
                         a -> new Stamp(a));
 
-                group.addTransfer(inp_purchaser, inp_recipient,
-                        inp_amount, inp_date, inp_title, inp_currency);
+                group.addTransfer(inp_title, inp_purchaser, inp_recipient,
+                        inp_amount, inp_currency, inp_date);
 
                 if (!scanner.get("Add another transfer", "n", List.of("n", "y"),
                         a -> a.toLowerCase() == "y")) {
@@ -153,7 +155,7 @@ class JavaSplit implements Callable<Integer> {
         }
 
         group.save(file_path);
-        scanner.finish();
+        scanner.close();
 
         return 0;
     }

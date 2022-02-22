@@ -28,7 +28,7 @@ public enum Currency {
     private String symbol;
 
     Currency() {
-        this.symbol = this.name();
+        symbol = name();
     }
 
     Currency(String symbol) {
@@ -37,6 +37,6 @@ public enum Currency {
 
     @Override
     public String toString() {
-        return this.symbol;
+        return symbol;
     }
 }

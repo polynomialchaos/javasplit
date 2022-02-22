@@ -30,22 +30,22 @@ public class Member extends Base {
     private String name;
     private ArrayList<Purchase> participations = new ArrayList<Purchase>();
 
-    Member(String name) {
+    public Member(String name) {
         this.name = name;
     }
 
     public void addParticipation(Purchase purchase) {
-        this.participations.add(purchase);
+        participations.add(purchase);
     }
 
     public double getBalance() {
         double balance = 0.0;
-        for (Purchase participation : this.participations) {
-            if (participation.isPurchaser(this.name)) {
+        for (Purchase participation : participations) {
+            if (participation.isPurchaser(name)) {
                 balance += participation.getAmount();
             }
 
-            if (participation.isRecipient(this.name)) {
+            if (participation.isRecipient(name)) {
                 balance -= participation.getAmountPerMember();
             }
         }
@@ -58,13 +58,18 @@ public class Member extends Base {
     }
 
     public void removeParticipation(Purchase participation) {
-        this.participations.remove(participation);
+        participations.remove(participation);
     }
 
     @Override
-    public LinkedHashMap<String, Object> serialize() {
+    protected LinkedHashMap<String, Object> serialize() {
         LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
-        hash_map.put("name", this.name);
+        hash_map.put("name", name);
         return hash_map;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s (%s)", name, super.toString());
     }
 }

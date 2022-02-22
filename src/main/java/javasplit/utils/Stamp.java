@@ -35,35 +35,28 @@ public class Stamp {
     private LocalDateTime time;
 
     public Stamp() {
-        this.setTime(java.time.LocalDateTime.now());
+        setTime(java.time.LocalDateTime.now());
     }
 
     public Stamp(LocalDateTime time) {
-        this.setTime(time);
+        setTime(time);
     }
 
     public Stamp(String time_string) {
-        this.setTime(time_string);
+        setTime(time_string);
     }
 
-    private static LocalDateTime fromString(String time_string) {
-        LocalDateTime time;
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(String time_string) {
         try {
             time = LocalDateTime.parse(time_string, fmt);
         } catch (DateTimeParseException e) {
             LocalDate tmp = LocalDate.parse(time_string, fmt_date);
             time = tmp.atStartOfDay();
         }
-
-        return time;
-    }
-
-    public LocalDateTime getTime() {
-        return this.time;
-    }
-
-    public void setTime(String time_string) {
-        this.time = fromString(time_string);
     }
 
     public void setTime(LocalDateTime time) {
@@ -72,11 +65,11 @@ public class Stamp {
 
     @Override
     public String toString() {
-        LocalDate tmp = this.time.toLocalDate();
-        if (this.time.isEqual(tmp.atStartOfDay())) {
+        LocalDate tmp = time.toLocalDate();
+        if (time.isEqual(tmp.atStartOfDay())) {
             return tmp.format(Stamp.fmt_date);
         } else {
-            return this.time.format(Stamp.fmt);
+            return time.format(Stamp.fmt);
         }
     }
 }

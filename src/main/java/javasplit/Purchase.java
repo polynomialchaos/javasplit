@@ -28,6 +28,7 @@ import java.util.List;
 import javasplit.utils.Base;
 import javasplit.utils.Currency;
 import javasplit.utils.Stamp;
+import javasplit.utils.Utils;
 
 public class Purchase extends Base {
     protected Group group;
@@ -38,38 +39,38 @@ public class Purchase extends Base {
     protected String title;
     protected Currency currency;
 
-    Purchase(Group group, String purchaser, List<String> recipients, Double amount,
-            Stamp date, String title, Currency currency) {
+    public Purchase(Group group, String title, String purchaser, List<String> recipients,
+            Double amount, Currency currency, Stamp date) {
         this.group = group;
-        this.setPurchaser(purchaser);
-        this.setRecipients(recipients);
-        this.amount = amount;
-        this.date = date;
         this.title = title;
+        setPurchaser(purchaser);
+        setRecipients(recipients);
+        this.amount = amount;
         this.currency = currency;
+        this.date = date;
 
-        this.link();
+        link();
     }
 
     public Double getAmount() {
-        return this.group.exchange(this.amount, this.currency);
+        return group.exchange(amount, currency);
     }
 
     public Double getAmountPerMember() {
-        return this.getAmount() / this.numberOfRecipients();
+        return getAmount() / numberOfRecipients();
     }
 
     public boolean isPurchaser(String name) {
-        return this.purchaser.getName().equals(name);
+        return purchaser.getName().equals(name);
     }
 
     public boolean isRecipient(String name) {
-        return this.recipients.containsKey(name);
+        return recipients.containsKey(name);
     }
 
     protected void link() {
-        HashSet<Member> members = new HashSet<Member>(this.recipients.values());
-        members.add(this.purchaser);
+        HashSet<Member> members = new HashSet<Member>(recipients.values());
+        members.add(purchaser);
 
         for (Member member : members) {
             member.addParticipation(this);
@@ -77,43 +78,43 @@ public class Purchase extends Base {
     }
 
     public int numberOfRecipients() {
-        return this.recipients.size();
+        return recipients.size();
     }
 
     @Override
-    public LinkedHashMap<String, Object> serialize() {
+    protected LinkedHashMap<String, Object> serialize() {
         LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
-        hash_map.put("purchaser", this.purchaser.getName());
-        hash_map.put("recipients", Base.forEach_r(this.recipients.keySet(), a -> a));
-        hash_map.put("amount", this.amount);
-        hash_map.put("currency", this.currency.name());
-        hash_map.put("date", this.date.toString());
-        hash_map.put("title", this.title);
+        hash_map.put("purchaser", purchaser.getName());
+        hash_map.put("recipients", Utils.convertAll(recipients.keySet(), a -> a));
+        hash_map.put("amount", amount);
+        hash_map.put("currency", currency.name());
+        hash_map.put("date", date.toString());
+        hash_map.put("title", title);
         return hash_map;
     }
 
     private void setPurchaser(String purchaser) {
-        this.purchaser = this.group.getMemberByName(purchaser);
+        this.purchaser = group.getMemberByName(purchaser);
     }
 
     private void setRecipients(List<String> recipients) {
         for (String recipient : recipients) {
-            this.recipients.put(recipient, this.group.getMemberByName(recipient));
+            this.recipients.put(recipient, group.getMemberByName(recipient));
         }
     }
 
     @Override
     public String toString() {
-        String tmp = String.format("%s (%s) %s: %.2f%s -> %s", this.title, this.date,
-                this.purchaser.getName(), this.amount, this.currency,
-                String.join(", ", this.recipients.keySet()));
+        String tmp = String.format("%s (%s) %s: %.2f%s -> %s",
+                title, date, purchaser.getName(), amount, currency,
+                String.join(", ", recipients.keySet()));
 
         return tmp;
     }
 
     protected void unlink() {
-        HashSet<Member> members = new HashSet<Member>(this.recipients.values());
-        members.add(this.purchaser);
+        HashSet<Member> members = new HashSet<Member>(recipients.values());
+        members.add(purchaser);
 
         for (Member member : members) {
             member.removeParticipation(this);

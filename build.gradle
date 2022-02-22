@@ -27,5 +27,10 @@ test {
 
     testLogging {
         showStandardStreams = true
+
+        showExceptions true
+        exceptionFormat "full"
+        showCauses true
+        showStackTraces true
     }
 }

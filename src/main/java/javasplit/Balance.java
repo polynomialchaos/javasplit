@@ -25,15 +25,15 @@ import javasplit.utils.Currency;
 import javasplit.utils.Stamp;
 
 public class Balance extends Transfer {
-    Balance(Group group, String purchaser, String recipient, Double amount,
-            Stamp date, Currency currency) {
-        super(group, purchaser, recipient, amount, date, "Pending balance", currency);
+    public Balance(Group group, String purchaser, String recipient,
+            Double amount, Currency currency, Stamp date) {
+        super(group, "Pending balance", purchaser, recipient, amount, currency, date);
     }
 
     public void toTransfer() {
-        String recipient  = this.recipients.values().iterator().next().getName();
-        this.group.addTransfer(this.purchaser.getName(), recipient, this.amount,
-            this.date, this.title, this.currency);
+        String recipient = recipients.values().iterator().next().getName();
+        group.addTransfer(title, purchaser.getName(), recipient,
+                amount, currency, date);
     }
 
     @Override

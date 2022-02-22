@@ -1,17 +1,22 @@
 package javasplit.utils;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Function;
 
-public class InputScanner {
-    Scanner scanner;
+public final class InputScanner {
+    private Scanner scanner;
 
     public InputScanner() {
         scanner = new Scanner(System.in);
     }
 
-    public void finish() {
+    public InputScanner(InputStream input) {
+        scanner = new Scanner(input);
+    }
+
+    public void close() {
         scanner.close();
     }
 
@@ -33,7 +38,7 @@ public class InputScanner {
         }
 
         if (options != null) {
-            des_str = String.format("%s (%s)", des_str, String.join(",", Base.forEach_r(options, a -> a)));
+            des_str = String.format("%s (%s)", des_str, String.join(",", Utils.convertAll(options, a -> a)));
         }
 
         System.out.print(String.format("%s: ", des_str));

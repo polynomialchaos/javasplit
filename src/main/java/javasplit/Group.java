@@ -38,8 +38,9 @@ import com.google.gson.stream.JsonReader;
 import javasplit.utils.Base;
 import javasplit.utils.Currency;
 import javasplit.utils.Stamp;
+import javasplit.utils.Utils;
 
-public class Group extends Base {
+public final class Group extends Base {
     private String name;
     private String description;
     private Currency currency;
@@ -48,17 +49,17 @@ public class Group extends Base {
     private ArrayList<Purchase> purchases = new ArrayList<Purchase>();
     private ArrayList<Transfer> transfers = new ArrayList<Transfer>();
 
-    Group(String path) {
+    public Group(String path) {
         try {
             Gson gson = new Gson();
             JsonReader reader = new JsonReader(new FileReader(path));
 
             // group
             Map<?, ?> gson_root = gson.fromJson(reader, Map.class);
-            this.name = (String) gson_root.get("name");
-            this.description = (String) gson_root.get("description");
-            this.currency = Currency.valueOf((String) gson_root.get("currency"));
-            this.setTime((String) gson_root.get("stamp"));
+            name = (String) gson_root.get("name");
+            description = (String) gson_root.get("description");
+            currency = Currency.valueOf((String) gson_root.get("currency"));
+            setTime((String) gson_root.get("stamp"));
 
             // exchange rates
             Map<?, ?> gson_exchange_rates = (Map<?, ?>) gson_root.get("exchange_rates");
@@ -75,7 +76,7 @@ public class Group extends Base {
                 Map<?, ?> gson_member = (Map<?, ?>) gson_member_it;
 
                 String name = (String) gson_member.get("name");
-                Member tmp = this.addMember(name);
+                Member tmp = addMember(name);
                 tmp.setTime((String) gson_member.get("stamp"));
             }
 
@@ -91,9 +92,9 @@ public class Group extends Base {
                 String title = (String) gson_purchase.get("title");
                 Currency currency = Currency.valueOf((String) gson_purchase.get("currency"));
 
-                Purchase purchase = this.addPurchase(purchaser,
-                        Base.forEach_r(recipients, a -> ((Object) a).toString()),
-                        amount, date, title, currency);
+                Purchase purchase = addPurchase(title, purchaser,
+                        Utils.convertAll(recipients, a -> ((Object) a).toString()),
+                        amount, currency, date);
                 purchase.setTime((String) gson_purchase.get("stamp"));
             }
 
@@ -109,90 +110,93 @@ public class Group extends Base {
                 String title = (String) gson_transfer.get("title");
                 Currency currency = Currency.valueOf((String) gson_transfer.get("currency"));
 
-                Transfer transfer = this.addTransfer(purchaser, recipient,
-                        amount, date, title, currency);
+                Transfer transfer = addTransfer(title, purchaser, recipient,
+                        amount, currency, date);
                 transfer.setTime((String) gson_transfer.get("stamp"));
             }
 
             reader.close();
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 
-    Group(String name, String description, Currency currency) {
+    public Group(String name, String description, Currency currency) {
         this.name = name;
         this.description = description;
         this.currency = currency;
     }
 
-    Member addMember(String name) {
+    public Member addMember(String name) {
         if (name.isBlank()) {
             throw new RuntimeException("Empty member name provided!");
         }
 
-        if (this.members.containsKey(name)) {
+        if (members.containsKey(name)) {
             throw new RuntimeException("Duplicate member name provided!");
         }
 
         Member member = new Member(name);
-        this.members.put(name, member);
+        members.put(name, member);
 
         return member;
     }
 
-    Purchase addPurchase(String purchaser, List<String> recipients, Double amount,
-            Stamp date, String title, Currency currency) {
-        Purchase purchase = new Purchase(this, purchaser, recipients, amount, date, title, currency);
-        this.purchases.add(purchase);
+    public Purchase addPurchase(String title, String purchaser, List<String> recipients,
+            Double amount, Currency currency, Stamp date) {
+        Purchase purchase = new Purchase(
+                this, title, purchaser, recipients, amount, currency, date);
+        purchases.add(purchase);
 
         return purchase;
     }
 
-    Transfer addTransfer(String purchaser, String recipient, Double amount,
-            Stamp date, String title, Currency currency) {
-        Transfer transfer = new Transfer(this, purchaser, recipient, amount, date, title, currency);
-        this.transfers.add(transfer);
+    public Transfer addTransfer(String title, String purchaser, String recipient,
+            Double amount, Currency currency, Stamp date) {
+        Transfer transfer = new Transfer(
+                this, title, purchaser, recipient, amount, currency, date);
+        transfers.add(transfer);
 
         return transfer;
     }
 
-    double exchange(double amount, Currency currency) {
-        if (currency.equals(this.currency)) {
+    public double exchange(double amount, Currency currency) {
+        if (this.currency.equals(currency)) {
             return amount;
         } else {
-            if (!this.exchange_rates.containsKey(currency)) {
+            if (!exchange_rates.containsKey(currency)) {
                 throw new RuntimeException("No valid exchange rate found!");
             }
-            return amount / this.exchange_rates.get(currency);
+            return amount / exchange_rates.get(currency);
         }
     }
 
-    Member getMemberByName(String name) {
-        if (!this.members.containsKey(name)) {
+    public Member getMemberByName(String name) {
+        if (!members.containsKey(name)) {
             throw new RuntimeException(String.format("No member with name \"%s\"!", name));
         }
 
-        return this.members.get(name);
+        return members.get(name);
     }
 
-    List<String> getMemberNames() {
-        return Base.forEach_r(this.members.entrySet(), a -> a.getKey());
+    public List<String> getMemberNames() {
+        return Utils.convertAll(members.entrySet(), a -> a.getKey());
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public int getNumberOfMembers() {
-        return this.members.size();
+        return members.size();
     }
 
     public List<Balance> getPendingBalances() {
         ArrayList<Balance> balances = new ArrayList<Balance>();
 
         // sorted members
-        List<Member> members = Base.forEach_r(this.members.values(), a -> a);
+        List<Member> members = Utils.convertAll(this.members.values(), a -> a);
         Collections.sort(members, new Comparator<Member>() {
             @Override
             public int compare(Member m1, Member m2) {
@@ -222,8 +226,9 @@ public class Group extends Base {
                     bal_add.put(sender, bal_add.get(sender) + bal);
                     bal_add.put(receiver, bal_add.get(receiver) - bal);
 
-                    Balance balance = new Balance(this, sender.getName(),
-                            receiver.getName(), bal, new Stamp(), this.currency);
+                    Balance balance = new Balance(
+                            this, sender.getName(), receiver.getName(),
+                            bal, currency, new Stamp());
                     balances.add(balance);
                 }
             }
@@ -247,19 +252,19 @@ public class Group extends Base {
         String rule = "-".repeat(length);
 
         System.out.println(mainrule);
-        System.out.println(String.format("Summary for group: %s", this.name));
-        if (!this.description.isEmpty()) {
-            System.out.println(this.description);
+        System.out.println(String.format("Summary for group: %s", name));
+        if (!description.isEmpty()) {
+            System.out.println(description);
         }
 
         System.out.println(mainrule);
-        System.out.println(String.format(" * Turnover: %.2f%s", this.getTurnover(), this.currency));
+        System.out.println(String.format(" * Turnover: %.2f%s", getTurnover(), currency));
 
-        if (!this.exchange_rates.isEmpty()) {
+        if (!exchange_rates.isEmpty()) {
             System.out.println(rule);
             System.out.println("Exchange rates:");
-            for (Map.Entry<Currency, Double> exchange_rate : this.exchange_rates.entrySet()) {
-                System.out.println(String.format(" * 1%s -> %.2f%s", this.currency, exchange_rate.getValue(),
+            for (Map.Entry<Currency, Double> exchange_rate : exchange_rates.entrySet()) {
+                System.out.println(String.format(" * 1%s -> %.2f%s", currency, exchange_rate.getValue(),
                         exchange_rate.getKey()));
             }
 
@@ -267,59 +272,69 @@ public class Group extends Base {
 
         System.out.println(rule);
         System.out.println("Members:");
-        for (Member member : this.members.values()) {
+        for (Member member : members.values()) {
             System.out.println(String.format(" * %s", member.getName()));
         }
 
         System.out.println(rule);
         System.out.println("Purchases:");
-        for (Purchase purchase : this.purchases) {
+        for (Purchase purchase : purchases) {
             System.out.println(String.format(" * %s", purchase));
         }
 
         System.out.println(rule);
         System.out.println("Transfers:");
-        for (Transfer transfer : this.transfers) {
+        for (Transfer transfer : transfers) {
             System.out.println(String.format(" * %s", transfer));
         }
 
         System.out.println(rule);
         System.out.println("Pending balances:");
-        for (Balance balance : this.getPendingBalances()) {
+        for (Balance balance : getPendingBalances()) {
             System.out.println(String.format(" * %s", balance));
         }
 
         System.out.println(mainrule);
     }
 
+    public void setExchangeRate(Currency currency, Double rate) {
+        exchange_rates.put(currency, rate);
+    }
+
     public void save(String path) {
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             FileWriter writer = new FileWriter(path);
-            gson.toJson(this.toDict(), writer);
+            gson.toJson(toDict(), writer);
             writer.flush();
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 
     @Override
-    public LinkedHashMap<String, Object> serialize() {
+    protected LinkedHashMap<String, Object> serialize() {
         LinkedHashMap<String, Double> exchange_rates = new LinkedHashMap<String, Double>();
         for (Map.Entry<Currency, Double> entry : this.exchange_rates.entrySet()) {
             exchange_rates.put(entry.getKey().name(), entry.getValue());
         }
 
         LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
-        hash_map.put("name", this.name);
-        hash_map.put("description", this.description);
-        hash_map.put("currency", this.currency.name());
-        hash_map.put("members", Base.forEach_r(this.members.values(), a -> a.toDict()));
-        hash_map.put("purchases", Base.forEach_r(this.purchases, a -> a.toDict()));
-        hash_map.put("transfers", Base.forEach_r(this.transfers, a -> a.toDict()));
+        hash_map.put("name", name);
+        hash_map.put("description", description);
+        hash_map.put("currency", currency.name());
+        hash_map.put("members", Utils.convertAll(members.values(), a -> a.toDict()));
+        hash_map.put("purchases", Utils.convertAll(purchases, a -> a.toDict()));
+        hash_map.put("transfers", Utils.convertAll(transfers, a -> a.toDict()));
         hash_map.put("exchange_rates", exchange_rates);
 
         return hash_map;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s [%s] %s (%s)", name, description, currency, super.toString());
     }
 }
