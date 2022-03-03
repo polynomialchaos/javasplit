@@ -172,6 +172,10 @@ public final class Group extends Base {
         }
     }
 
+    public Currency getCurrency() {
+        return currency;
+    }
+
     public Member getMemberByName(String name) {
         if (!members.containsKey(name)) {
             throw new RuntimeException(String.format("No member with name \"%s\"!", name));

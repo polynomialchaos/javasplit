@@ -38,6 +38,9 @@ import javasplit.utils.Utils;
 @Command(name = "JavaSplit", mixinStandardHelpOptions = true, version = "1.0.0", description = "A simple Java package for money pool split development.")
 class JavaSplit implements Callable<Integer> {
 
+    @Option(names = { "-e", "--exchange" }, description = "Add exchange rate(s) to the group")
+    boolean add_exchange;
+
     @Option(names = { "-m", "--member" }, description = "Add member(s) to the group")
     boolean add_member;
 
@@ -65,6 +68,28 @@ class JavaSplit implements Callable<Integer> {
                     a -> Currency.valueOf(a));
 
             group = new Group(inp_title, inp_description, inp_currency);
+        }
+
+        // add exchange(s)
+        if (add_exchange) {
+            List<Currency> currencies =
+                Utils.convertAll(List.of(Currency.values()), a -> a);
+            currencies.removeIf(a -> a == group.getCurrency());
+
+            while (currencies.size() > 0) {
+                Currency inp_currency = scanner.get("Exchange rate currency", currencies.get(0).name(),
+                        Utils.convertAll(currencies, a -> a.name()),
+                        a -> Currency.valueOf(a));
+                Double inp_rate = scanner.get(String.format("%s exchange rate", inp_currency.name()),
+                        a -> Double.parseDouble(a));
+
+                group.setExchangeRate(inp_currency, inp_rate);
+
+                if (!scanner.get("Add another exchange rate", "n", List.of("n", "y"),
+                        a -> a.toLowerCase() == "y")) {
+                    break;
+                }
+            }
         }
 
         // add member(s)
