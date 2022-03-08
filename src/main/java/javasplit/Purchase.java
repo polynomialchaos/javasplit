@@ -30,6 +30,9 @@ import javasplit.utils.Currency;
 import javasplit.utils.Stamp;
 import javasplit.utils.Utils;
 
+/**
+ * Purchase class.
+ */
 public class Purchase extends Base {
     protected Group group;
     protected Member purchaser;
@@ -39,6 +42,9 @@ public class Purchase extends Base {
     protected String title;
     protected Currency currency;
 
+    /**
+     * Initialize a Purchase object.
+     */
     public Purchase(Group group, String title, String purchaser, List<String> recipients,
             Double amount, Currency currency, Stamp date) {
         this.group = group;
@@ -52,22 +58,45 @@ public class Purchase extends Base {
         link();
     }
 
+    /**
+     * Gets the amount in group currency.
+     *
+     * @return A double value.
+     */
     public Double getAmount() {
         return group.exchange(amount, currency);
     }
 
+    /**
+     * Gets the amount per member in group currency.
+     *
+     * @return A double value.
+     */
     public Double getAmountPerMember() {
         return getAmount() / numberOfRecipients();
     }
 
+    /**
+     * Checks the name to be the purchaser.
+     *
+     * @return A boolean flag.
+     */
     public boolean isPurchaser(String name) {
         return purchaser.getName().equals(name);
     }
 
+    /**
+     * Checks the name to be a recipients.
+     *
+     * @return A boolean flag.
+     */
     public boolean isRecipient(String name) {
         return recipients.containsKey(name);
     }
 
+    /**
+     * Link this Purchase in all members.
+     */
     protected void link() {
         HashSet<Member> members = new HashSet<Member>(recipients.values());
         members.add(purchaser);
@@ -77,10 +106,20 @@ public class Purchase extends Base {
         }
     }
 
+    /**
+     * Gets the number of recipients.
+     *
+     * @return A integer value.
+     */
     public int numberOfRecipients() {
         return recipients.size();
     }
 
+    /**
+     * Serializes the object.
+     *
+     * @return A LinkedHashMap of type String and Object.
+     */
     @Override
     protected LinkedHashMap<String, Object> serialize() {
         LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
@@ -93,16 +132,27 @@ public class Purchase extends Base {
         return hash_map;
     }
 
+    /**
+     * Set purchaser by name
+     */
     private void setPurchaser(String purchaser) {
         this.purchaser = group.getMemberByName(purchaser);
     }
 
+    /**
+     * Set recipients by List of names.
+     */
     private void setRecipients(List<String> recipients) {
         for (String recipient : recipients) {
             this.recipients.put(recipient, group.getMemberByName(recipient));
         }
     }
 
+    /**
+     * Converts to an equivalent string.
+     *
+     * @return A string.
+     */
     @Override
     public String toString() {
         String tmp = String.format("%s (%s) %s: %.2f%s -> %s",
@@ -112,6 +162,9 @@ public class Purchase extends Base {
         return tmp;
     }
 
+    /**
+     * Unlink this Purchase from all members.
+     */
     protected void unlink() {
         HashSet<Member> members = new HashSet<Member>(recipients.values());
         members.add(purchaser);

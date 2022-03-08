@@ -24,32 +24,59 @@ package javasplit.utils;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 
+/**
+ * Base class defining required package class methods.
+ */
 public class Base {
     private Stamp stamp;
 
+    /**
+     * Initialize a Base object.
+     */
     public Base() {
         stamp = new Stamp();
     }
 
-    public void setTime(String time_string) {
-        stamp.setTime(time_string);
-    }
-
-    public void setTime(LocalDateTime time) {
-        stamp.setTime(time);
-    }
-
+    /**
+     * Serializes the object.
+     *
+     * @return A LinkedHashMap of type String and Object.
+     */
     protected LinkedHashMap<String, Object> serialize() {
         LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
         return hash_map;
     }
 
+    /**
+     * Sets the time from a string.
+     */
+    public void setTime(String time_string) {
+        stamp.setTime(time_string);
+    }
+
+    /**
+     * Sets the time from a DateTime object.
+     */
+    public void setTime(LocalDateTime time) {
+        stamp.setTime(time);
+    }
+
+    /**
+     * Converts to an equivalent dictionary.
+     *
+     * @return A LinkedHashMap of type String and Object.
+     */
     public final LinkedHashMap<String, Object> toDict() {
         LinkedHashMap<String, Object> tmp = serialize();
         tmp.put("stamp", stamp.toString());
         return tmp;
     }
 
+    /**
+     * Converts to an equivalent string.
+     *
+     * @return A string.
+     */
     @Override
     public String toString() {
         return String.format("<%s stamp=%s>", getClass().getName(), stamp.toString());

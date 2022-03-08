@@ -21,20 +21,34 @@
 // SOFTWARE.
 package javasplit.utils;
 
+/**
+ * Currency enumeration class.
+ */
 public enum Currency {
     Euro("€"),
     USD("$");
 
     private String symbol;
 
+    /**
+     * Initialize a Currency object.
+     */
     Currency() {
         symbol = name();
     }
 
+    /**
+     * Initialize a Currency object with a given symbol.
+     */
     Currency(String symbol) {
         this.symbol = symbol;
     }
 
+    /**
+     * Converts to an equivalent string.
+     *
+     * @return A string.
+     */
     @Override
     public String toString() {
         return symbol;

@@ -26,6 +26,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * TimeStamp class for storing time information.
+ */
 public class Stamp {
     private static String _fmt_date = "dd.MM.yyyy";
     private static String _fmt_time = "HH:mm:ss";
@@ -34,22 +37,40 @@ public class Stamp {
     private static DateTimeFormatter fmt = DateTimeFormatter.ofPattern(_fmt);
     private LocalDateTime time;
 
+    /**
+     * Initialize a TimeStamp object.</summary>
+     *
+     */
     public Stamp() {
         setTime(java.time.LocalDateTime.now());
     }
 
+    /**
+     * Initialize a TimeStamp object from DateTime object.
+     */
     public Stamp(LocalDateTime time) {
         setTime(time);
     }
 
+    /**
+     * Initialize a TimeStamp object from time string.
+     */
     public Stamp(String time_string) {
         setTime(time_string);
     }
 
+    /**
+     * Gets the DateTime object.
+     *
+     * @return A DateTime object.
+     */
     public LocalDateTime getTime() {
         return time;
     }
 
+    /**
+     * Sets the time from a string.
+     */
     public void setTime(String time_string) {
         try {
             time = LocalDateTime.parse(time_string, fmt);
@@ -59,10 +80,18 @@ public class Stamp {
         }
     }
 
+    /**
+     * Sets the time from a DateTime object.
+     */
     public void setTime(LocalDateTime time) {
         this.time = time;
     }
 
+    /**
+     * Converts to an equivalent string.
+     *
+     * @return A string.
+     */
     @Override
     public String toString() {
         LocalDate tmp = time.toLocalDate();

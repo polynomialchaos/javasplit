@@ -24,23 +24,40 @@ package javasplit;
 import javasplit.utils.Currency;
 import javasplit.utils.Stamp;
 
+/**
+ * Balance class for a temporary transfer (not linked).
+ */
 public class Balance extends Transfer {
+    /**
+     * Initialize a Balance object.
+     */
     public Balance(Group group, String purchaser, String recipient,
             Double amount, Currency currency, Stamp date) {
         super(group, "Pending balance", purchaser, recipient, amount, currency, date);
     }
 
-    public void toTransfer() {
-        String recipient = recipients.values().iterator().next().getName();
-        group.addTransfer(title, purchaser.getName(), recipient,
-                amount, currency, date);
-    }
-
+    /**
+     * Do not link a Balance.
+     */
     @Override
     protected void link() {
         // do not link
     }
 
+    /**
+     * Convert Balance to a linked Transfer.
+     *
+     * @return A Transfer object.
+     */
+    public Transfer toTransfer() {
+        String recipient = recipients.values().iterator().next().getName();
+        return group.addTransfer(title, purchaser.getName(), recipient,
+                amount, currency, date);
+    }
+
+    /**
+     * Nothing to unlink in a Balance.
+     */
     @Override
     protected void unlink() {
         // nothing to unlink

@@ -25,7 +25,13 @@ import javasplit.utils.Currency;
 import javasplit.utils.Stamp;
 import javasplit.utils.Utils;
 
+/**
+ * Transfer class.
+ */
 public class Transfer extends Purchase {
+    /**
+     * Initialize a Transfer object.
+     */
     Transfer(Group group, String title, String purchaser, String recipient,
             Double amount, Currency currency, Stamp date) {
         super(group, title, purchaser, Utils.atLeast1D(recipient), amount, currency, date);

@@ -2,6 +2,32 @@
 
 A Java package for money pool split development.
 
+## Prerequisites
+
+* Java OpenJDK-17 on Ubuntu 20.04
+
+```sh
+sudo apt-get install openjdk-17-jdk openjdk-17-demo openjdk-17-doc openjdk-17-jre-headless openjdk-17-source
+```
+
+* Gradle (VERSION: https://services.gradle.org/distributions/)
+
+```sh
+wget https://services.gradle.org/distributions/gradle-${VERSION}-bin.zip -P /tmp
+sudo unzip -d /opt/gradle /tmp/gradle-${VERSION}-bin.zip
+sudo ln -s /opt/gradle/gradle-${VERSION} /opt/gradle/latest
+```
+
+```sh
+sudo vim /etc/profile.d/gradle.sh
+>> export GRADLE_HOME=/opt/gradle/latest
+>> export PATH=${GRADLE_HOME}/bin:${PATH}
+```
+
+```sh
+sudo chmod +x /etc/profile.d/gradle.sh
+```
+
 ## Installation
 
 To generate an executable of the **JavaSplit** package simply call

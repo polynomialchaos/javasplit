@@ -26,18 +26,32 @@ import java.util.LinkedHashMap;
 
 import javasplit.utils.Base;
 
+/**
+ * Member class which also links purchases and transfers.
+ */
 public class Member extends Base {
     private String name;
     private ArrayList<Purchase> participations = new ArrayList<Purchase>();
 
+    /**
+     * Initialize a Member object.
+     */
     public Member(String name) {
         this.name = name;
     }
 
+    /**
+     * Adds a purchase to the participation list.
+     */
     public void addParticipation(Purchase purchase) {
         participations.add(purchase);
     }
 
+    /**
+     * Gets the balance of the member.
+     *
+     * @return A Double value.
+     */
     public double getBalance() {
         double balance = 0.0;
         for (Purchase participation : participations) {
@@ -53,14 +67,27 @@ public class Member extends Base {
         return balance;
     }
 
+    /**
+     * Gets the name of the member
+     *
+     * @return A string.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Removes a purchase from the participation list.
+     */
     public void removeParticipation(Purchase participation) {
         participations.remove(participation);
     }
 
+    /**
+     * Serializes the object.
+     *
+     * @return A LinkedHashMap of type String and Object.
+     */
     @Override
     protected LinkedHashMap<String, Object> serialize() {
         LinkedHashMap<String, Object> hash_map = new LinkedHashMap<String, Object>();
@@ -68,6 +95,11 @@ public class Member extends Base {
         return hash_map;
     }
 
+    /**
+     * Converts to an equivalent string.
+     *
+     * @return A string.
+     */
     @Override
     public String toString() {
         return String.format("%s (%s)", name, super.toString());

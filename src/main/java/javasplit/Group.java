@@ -40,6 +40,9 @@ import javasplit.utils.Currency;
 import javasplit.utils.Stamp;
 import javasplit.utils.Utils;
 
+/**
+ * Group class.
+ */
 public final class Group extends Base {
     private String name;
     private String description;
@@ -49,6 +52,18 @@ public final class Group extends Base {
     private ArrayList<Purchase> purchases = new ArrayList<Purchase>();
     private ArrayList<Transfer> transfers = new ArrayList<Transfer>();
 
+    /**
+     * Initialize a Group object with name, description and currency.
+     */
+    public Group(String name, String description, Currency currency) {
+        this.name = name;
+        this.description = description;
+        this.currency = currency;
+    }
+
+    /**
+     * Initialize a Group object from Json file path string.
+     */
     public Group(String path) {
         try {
             Gson gson = new Gson();
@@ -122,12 +137,11 @@ public final class Group extends Base {
         }
     }
 
-    public Group(String name, String description, Currency currency) {
-        this.name = name;
-        this.description = description;
-        this.currency = currency;
-    }
-
+    /**
+     * Adds a member by name to the group.
+     *
+     * @return A Member object.
+     */
     public Member addMember(String name) {
         if (name.isBlank()) {
             throw new RuntimeException("Empty member name provided!");
@@ -143,6 +157,11 @@ public final class Group extends Base {
         return member;
     }
 
+    /**
+     * Adds a purchase to the group.
+     *
+     * @return A Purchase object.
+     */
     public Purchase addPurchase(String title, String purchaser, List<String> recipients,
             Double amount, Currency currency, Stamp date) {
         Purchase purchase = new Purchase(
@@ -152,6 +171,11 @@ public final class Group extends Base {
         return purchase;
     }
 
+    /**
+     * Adds a transfer to the group.
+     *
+     * @return A Transfer object.
+     */
     public Transfer addTransfer(String title, String purchaser, String recipient,
             Double amount, Currency currency, Stamp date) {
         Transfer transfer = new Transfer(
@@ -161,6 +185,11 @@ public final class Group extends Base {
         return transfer;
     }
 
+    /**
+     * Gets the exchange amount based on given currency.
+     *
+     * @return A double value.
+     */
     public double exchange(double amount, Currency currency) {
         if (this.currency.equals(currency)) {
             return amount;
@@ -172,10 +201,20 @@ public final class Group extends Base {
         }
     }
 
+    /**
+     * Gets the currency on the group.
+     *
+     * @return A Currency object.
+     */
     public Currency getCurrency() {
         return currency;
     }
 
+    /**
+     * Gets a member by name.
+     *
+     * @return A Member object.
+     */
     public Member getMemberByName(String name) {
         if (!members.containsKey(name)) {
             throw new RuntimeException(String.format("No member with name \"%s\"!", name));
@@ -184,18 +223,38 @@ public final class Group extends Base {
         return members.get(name);
     }
 
+    /**
+     * Gets member names.
+     *
+     * @return A List of type string.
+     */
     public List<String> getMemberNames() {
         return Utils.convertAll(members.entrySet(), a -> a.getKey());
     }
 
+    /**
+     * Gets the group name
+     *
+     * @return A string.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the number of members.
+     *
+     * @return A integer value.
+     */
     public int getNumberOfMembers() {
         return members.size();
     }
 
+    /**
+     * Gets the list of pending balances.
+     *
+     * @return A List of type Balance.
+     */
     public List<Balance> getPendingBalances() {
         ArrayList<Balance> balances = new ArrayList<Balance>();
 
@@ -241,6 +300,11 @@ public final class Group extends Base {
         return balances;
     }
 
+    /**
+     * Gets the group turnover.
+     *
+     * @return A double value.
+     */
     public double getTurnover() {
         double turnover = 0.0;
         for (Purchase purchase : this.purchases) {
@@ -250,6 +314,9 @@ public final class Group extends Base {
         return turnover;
     }
 
+    /**
+     * Prints the group objects.
+     */
     public void print() {
         int length = 80;
         String mainrule = "=".repeat(length);
@@ -301,10 +368,16 @@ public final class Group extends Base {
         System.out.println(mainrule);
     }
 
+    /**
+     * Sets the exchange rate for a given currency
+     */
     public void setExchangeRate(Currency currency, Double rate) {
         exchange_rates.put(currency, rate);
     }
 
+    /**
+     * Saves the group dictionary to a path.
+     */
     public void save(String path) {
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -318,6 +391,11 @@ public final class Group extends Base {
         }
     }
 
+    /**
+     * Serializes the object.
+     *
+     * @return A LinkedHashMap of type String and Object.
+     */
     @Override
     protected LinkedHashMap<String, Object> serialize() {
         LinkedHashMap<String, Double> exchange_rates = new LinkedHashMap<String, Double>();
@@ -337,6 +415,11 @@ public final class Group extends Base {
         return hash_map;
     }
 
+    /**
+     * Converts to an equivalent string.
+     *
+     * @return A string.
+     */
     @Override
     public String toString() {
         return String.format("%s [%s] %s (%s)", name, description, currency, super.toString());

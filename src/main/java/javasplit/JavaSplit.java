@@ -35,6 +35,9 @@ import javasplit.utils.InputScanner;
 import javasplit.utils.Stamp;
 import javasplit.utils.Utils;
 
+/**
+ * JAvaSplit class implementing main entry point.
+ */
 @Command(name = "JavaSplit", mixinStandardHelpOptions = true, version = "1.0.0", description = "A simple Java package for money pool split development.")
 class JavaSplit implements Callable<Integer> {
 
@@ -72,8 +75,7 @@ class JavaSplit implements Callable<Integer> {
 
         // add exchange(s)
         if (add_exchange) {
-            List<Currency> currencies =
-                Utils.convertAll(List.of(Currency.values()), a -> a);
+            List<Currency> currencies = Utils.convertAll(List.of(Currency.values()), a -> a);
             currencies.removeIf(a -> a == group.getCurrency());
 
             while (currencies.size() > 0) {
