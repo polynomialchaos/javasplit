@@ -29,7 +29,7 @@ import java.time.format.DateTimeParseException;
 /**
  * TimeStamp class for storing time information.
  */
-public class Stamp {
+public class TimeStamp {
     private static String _fmt_date = "dd.MM.yyyy";
     private static String _fmt_time = "HH:mm:ss";
     private static String _fmt = String.format("%s %s", _fmt_date, _fmt_time);
@@ -41,21 +41,21 @@ public class Stamp {
      * Initialize a TimeStamp object.</summary>
      *
      */
-    public Stamp() {
+    public TimeStamp() {
         setTime(java.time.LocalDateTime.now());
     }
 
     /**
      * Initialize a TimeStamp object from DateTime object.
      */
-    public Stamp(LocalDateTime time) {
+    public TimeStamp(LocalDateTime time) {
         setTime(time);
     }
 
     /**
      * Initialize a TimeStamp object from time string.
      */
-    public Stamp(String time_string) {
+    public TimeStamp(String time_string) {
         setTime(time_string);
     }
 
@@ -96,9 +96,9 @@ public class Stamp {
     public String toString() {
         LocalDate tmp = time.toLocalDate();
         if (time.isEqual(tmp.atStartOfDay())) {
-            return tmp.format(Stamp.fmt_date);
+            return tmp.format(TimeStamp.fmt_date);
         } else {
-            return time.format(Stamp.fmt);
+            return time.format(TimeStamp.fmt);
         }
     }
 }

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import javasplit.utils.Base;
 import javasplit.utils.Currency;
 import javasplit.utils.InputScanner;
-import javasplit.utils.Stamp;
+import javasplit.utils.TimeStamp;
 import javasplit.utils.Utils;
 
 public class TestUtils {
@@ -99,9 +99,9 @@ public class TestUtils {
         // Test: overload construction
         LocalDateTime now = LocalDateTime.now();
 
-        Stamp stamp_1 = new Stamp();
-        Stamp stamp_2 = new Stamp(now);
-        Stamp stamp_3 = new Stamp(date_time_string);
+        TimeStamp stamp_1 = new TimeStamp();
+        TimeStamp stamp_2 = new TimeStamp(now);
+        TimeStamp stamp_3 = new TimeStamp(date_time_string);
 
         // Test: set short date string
         System.out.println(stamp_1);

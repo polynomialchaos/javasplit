@@ -27,7 +27,7 @@ import java.util.List;
 
 import javasplit.utils.Base;
 import javasplit.utils.Currency;
-import javasplit.utils.Stamp;
+import javasplit.utils.TimeStamp;
 import javasplit.utils.Utils;
 
 /**
@@ -38,7 +38,7 @@ public class Purchase extends Base {
     protected Member purchaser;
     protected LinkedHashMap<String, Member> recipients = new LinkedHashMap<String, Member>();
     protected Double amount;
-    protected Stamp date;
+    protected TimeStamp date;
     protected String title;
     protected Currency currency;
 
@@ -46,7 +46,7 @@ public class Purchase extends Base {
      * Initialize a Purchase object.
      */
     public Purchase(Group group, String title, String purchaser, List<String> recipients,
-            Double amount, Currency currency, Stamp date) {
+            Double amount, Currency currency, TimeStamp date) {
         this.group = group;
         this.title = title;
         setPurchaser(purchaser);

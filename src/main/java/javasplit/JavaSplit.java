@@ -32,7 +32,7 @@ import picocli.CommandLine.Parameters;
 
 import javasplit.utils.Currency;
 import javasplit.utils.InputScanner;
-import javasplit.utils.Stamp;
+import javasplit.utils.TimeStamp;
 import javasplit.utils.Utils;
 
 /**
@@ -125,8 +125,8 @@ class JavaSplit implements Callable<Integer> {
                 Currency inp_currency = scanner.get("Purchase currency", Currency.Euro.name(),
                         Utils.convertAll(List.of(Currency.values()), a -> a.name()),
                         a -> Currency.valueOf(a));
-                Stamp inp_date = scanner.get("Purchase date", new Stamp().toString(),
-                        a -> new Stamp(a));
+                TimeStamp inp_date = scanner.get("Purchase date", new TimeStamp().toString(),
+                        a -> new TimeStamp(a));
 
                 group.addPurchase(inp_title, inp_purchaser, inp_recipients,
                         inp_amount, inp_currency, inp_date);
@@ -155,8 +155,8 @@ class JavaSplit implements Callable<Integer> {
                 Currency inp_currency = scanner.get("Transfer currency", Currency.Euro.name(),
                         Utils.convertAll(List.of(Currency.values()), a -> a.name()),
                         a -> Currency.valueOf(a));
-                Stamp inp_date = scanner.get("Transfer date", new Stamp().toString(),
-                        a -> new Stamp(a));
+                TimeStamp inp_date = scanner.get("Transfer date", new TimeStamp().toString(),
+                        a -> new TimeStamp(a));
 
                 group.addTransfer(inp_title, inp_purchaser, inp_recipient,
                         inp_amount, inp_currency, inp_date);

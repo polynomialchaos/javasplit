@@ -28,13 +28,13 @@ import java.util.LinkedHashMap;
  * Base class defining required package class methods.
  */
 public class Base {
-    private Stamp stamp;
+    private TimeStamp stamp;
 
     /**
      * Initialize a Base object.
      */
     public Base() {
-        stamp = new Stamp();
+        stamp = new TimeStamp();
     }
 
     /**

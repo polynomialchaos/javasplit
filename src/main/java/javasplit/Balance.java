@@ -22,7 +22,7 @@
 package javasplit;
 
 import javasplit.utils.Currency;
-import javasplit.utils.Stamp;
+import javasplit.utils.TimeStamp;
 
 /**
  * Balance class for a temporary transfer (not linked).
@@ -32,7 +32,7 @@ public class Balance extends Transfer {
      * Initialize a Balance object.
      */
     public Balance(Group group, String purchaser, String recipient,
-            Double amount, Currency currency, Stamp date) {
+            Double amount, Currency currency, TimeStamp date) {
         super(group, "Pending balance", purchaser, recipient, amount, currency, date);
     }
 

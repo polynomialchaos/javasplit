@@ -35,7 +35,7 @@ import javasplit.Member;
 import javasplit.Purchase;
 import javasplit.Transfer;
 import javasplit.utils.Currency;
-import javasplit.utils.Stamp;
+import javasplit.utils.TimeStamp;
 
 public class TestGroup {
     private static String path_1 = "src/test/java/res/javasplit.json";
@@ -60,22 +60,22 @@ public class TestGroup {
         // Test: add purchases
         Purchase purchase = group.addPurchase("purchase_1", "member_1",
                 List.of("member_1", "member_2"),
-                100.0, Currency.Euro, new Stamp("23.06.2021 07:54:09"));
+                100.0, Currency.Euro, new TimeStamp("23.06.2021 07:54:09"));
         purchase.setTime("23.06.2021 07:54:12");
 
         purchase = group.addPurchase("purchase_2", "member_1",
                 List.of("member_2"),
-                100.0, Currency.Euro, new Stamp("23.06.2021 07:54:21"));
+                100.0, Currency.Euro, new TimeStamp("23.06.2021 07:54:21"));
         purchase.setTime("23.06.2021 07:54:22");
 
         purchase = group.addPurchase("purchase_3", "member_1",
                 List.of("member_1", "member_2"),
-                200.0, Currency.USD, new Stamp("23.06.2021 07:57:19"));
+                200.0, Currency.USD, new TimeStamp("23.06.2021 07:57:19"));
         purchase.setTime("23.06.2021 07:57:19");
 
         // Test: add purchases
         Transfer transfer = group.addTransfer("transfer_1", "member_1", "member_1",
-                200.0, Currency.USD, new Stamp("23.06.2021 07:57:19"));
+                200.0, Currency.USD, new TimeStamp("23.06.2021 07:57:19"));
         transfer.setTime("23.06.2021 07:57:19");
 
         // Test: toDict()

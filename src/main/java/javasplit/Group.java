@@ -37,7 +37,7 @@ import com.google.gson.stream.JsonReader;
 
 import javasplit.utils.Base;
 import javasplit.utils.Currency;
-import javasplit.utils.Stamp;
+import javasplit.utils.TimeStamp;
 import javasplit.utils.Utils;
 
 /**
@@ -103,7 +103,7 @@ public final class Group extends Base {
                 String purchaser = (String) gson_purchase.get("purchaser");
                 List<?> recipients = (List<?>) gson_purchase.get("recipients");
                 Double amount = (Double) gson_purchase.get("amount");
-                Stamp date = new Stamp((String) gson_purchase.get("date"));
+                TimeStamp date = new TimeStamp((String) gson_purchase.get("date"));
                 String title = (String) gson_purchase.get("title");
                 Currency currency = Currency.valueOf((String) gson_purchase.get("currency"));
 
@@ -121,7 +121,7 @@ public final class Group extends Base {
                 String purchaser = (String) gson_transfer.get("purchaser");
                 String recipient = (String) ((List<?>) gson_transfer.get("recipients")).get(0);
                 Double amount = (Double) gson_transfer.get("amount");
-                Stamp date = new Stamp((String) gson_transfer.get("date"));
+                TimeStamp date = new TimeStamp((String) gson_transfer.get("date"));
                 String title = (String) gson_transfer.get("title");
                 Currency currency = Currency.valueOf((String) gson_transfer.get("currency"));
 
@@ -163,7 +163,7 @@ public final class Group extends Base {
      * @return A Purchase object.
      */
     public Purchase addPurchase(String title, String purchaser, List<String> recipients,
-            Double amount, Currency currency, Stamp date) {
+            Double amount, Currency currency, TimeStamp date) {
         Purchase purchase = new Purchase(
                 this, title, purchaser, recipients, amount, currency, date);
         purchases.add(purchase);
@@ -177,7 +177,7 @@ public final class Group extends Base {
      * @return A Transfer object.
      */
     public Transfer addTransfer(String title, String purchaser, String recipient,
-            Double amount, Currency currency, Stamp date) {
+            Double amount, Currency currency, TimeStamp date) {
         Transfer transfer = new Transfer(
                 this, title, purchaser, recipient, amount, currency, date);
         transfers.add(transfer);
@@ -291,7 +291,7 @@ public final class Group extends Base {
 
                     Balance balance = new Balance(
                             this, sender.getName(), receiver.getName(),
-                            bal, currency, new Stamp());
+                            bal, currency, new TimeStamp());
                     balances.add(balance);
                 }
             }
